@@ -1,130 +1,60 @@
 # Organik dan Anorganik Detection
 
 ## 📋 Deskripsi Project
-Project ini menggunakan YOLOv8 untuk mendeteksi dan mengklasifikasikan sampah ke dalam tiga kategori:
-- Organik
-- Anorganik
-- B3 (Bahan Berbahaya dan Beracun)
-
-Sistem ini dapat digunakan untuk:
-- Deteksi sampah dari gambar
-- Deteksi sampah secara real-time melalui webcam
-- Meningkatkan efisiensi pengelolaan sampah
+Proyek ini bertujuan untuk mendeteksi dan mengklasifikasikan sampah menjadi kategori **Organik** dan **Anorganik** menggunakan algoritma YOLOv8. Aplikasi ini menyediakan antarmuka berbasis web menggunakan Streamlit serta skrip Python standalone untuk deteksi real-time maupun gambar statis.
 
 ## ✨ Fitur
-- Deteksi multi-kelas (Organik, Anorganik, B3)
-- Real-time detection menggunakan webcam
-- Support untuk analisis gambar dan video
-- Menggunakan YOLOv8, state-of-the-art untuk object detection
+- **Deteksi Real-time**: Deteksi sampah organik dan anorganik melalui webcam secara langsung.
+- **Mode Upload**: Analisis gambar yang diunggah melalui antarmuka web.
+- **Switch Kamera**: Kemampuan beralih antara kamera default dan eksternal.
+- **Fleksibel**: Bisa dijalankan via Web App (Streamlit) atau Script Python biasa.
 
 ## 🛠️ Teknologi
-- Python 3.x
-- YOLOv8 (Ultralytics)
-- OpenCV
-- PyTorch
-- Torchvision
+- **Python 3.8+**
+- **YOLOv8** (Ultralytics)
+- **Streamlit** (Web Framework)
+- **OpenCV** (Image Processing)
 
 ## 🚀 Cara Menggunakan
 
-### Persyaratan
+### 1. Instalasi
+Pastikan Python sudah terinstal, lalu install library yang dibutuhkan:
 ```bash
-pip install ultralytics opencv-python
+pip install -r requirements.txt
 ```
 
-### Deteksi Gambar
-```python
-from ultralytics import YOLO
+### 2. Menjalankan Aplikasi (Rekomendasi)
+Gunakan antarmuka grafis (GUI) berbasis web untuk kemudahan penggunaan:
+```bash
+streamlit run app.py
+```
+_Aplikasi akan terbuka otomatis di browser Anda._
 
-model = YOLO('Training/weights/best.pt')
-image_path = 'path/to/image.jpg'
+### 3. Menjalankan Skrip Manual (Alternatif)
+Jika Anda ingin menjalankan tanpa antarmuka web:
 
-results = model(image_path)
-results[0].show()  # Tampilkan hasil
-results[0].save('hasil_prediksi/')  # Simpan hasil
+**Deteksi Gambar:**
+Edit path gambar di `Image_detection.py` lalu jalankan:
+```bash
+python Image_detection.py
 ```
 
-### Deteksi Real-time
-```python
-from ultralytics import YOLO
-import cv2
-import torch
-
-# Load model
-model = YOLO('Training/weights/best.pt')
-
-# Buka webcam
-cap = cv2.VideoCapture(0)
-
-while True:
-    ret, frame = cap.read()
-    if not ret:
-        break
-
-    # Deteksi objek (gunakan CPU jika ada error CUDA)
-    results = model(frame, device='cpu')
-    
-    # Visualisasi hasil
-    annotated_frame = results[0].plot()
-    
-    # Tampilkan
-    cv2.imshow('YOLOv8 Detection', annotated_frame)
-    
-    # Tekan 'q' untuk keluar
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-
-cap.release()
-cv2.destroyAllWindows()
+**Deteksi Real-time (Window OpenCV):**
+```bash
+python realtime.py
 ```
 
 ## 📂 Struktur Project
 ```
 project/
-├── train/          # Training dataset
-│   ├── images/
-│   └── labels/
-│
-├── valid/          # Validation dataset
-│   ├── images/
-│   └── labels/
-│
-├── test/           # Test dataset
-│   ├── images/
-│   └── labels/
-│
-├── Training/       # Hasil training
+├── app.py              # Aplikasi utama (Streamlit)
+├── Image_detection.py  # Skrip deteksi gambar statis
+├── realtime.py         # Skrip deteksi webcam window
+├── Training/           # Folder hasil training
 │   └── weights/
-│        └── best.pt
-│
-├── Image_detection.py  # Script deteksi gambar
-│
-├── realtime.py     # Script deteksi real-time
-│
-├── data.yaml       # Konfigurasi dataset
-│
-└── README.md
+│        └── best.pt    # Model YOLOv8 terlatih
+├── data.yaml           # Konfigurasi dataset
+└── requirements.txt    # Daftar dependensi
 ```
 
-## 🔄 Training Model
-Model dilatih menggunakan GPU di Google Colab dengan dataset yang telah diannotasi. Parameter training:
-- Model dasar: YOLOv8n
-- Epochs: 10
-- Image size: 640
-- Batch size: 16
-
-## 📊 Performa
-- mAP@0.5: [nilai]
-- Precision: [nilai]
-- Recall: [nilai]
-- FPS pada CPU: ~20-30 FPS
-
-## 📝 To-Do
-- [ ] Menambahkan deteksi untuk lebih banyak sub-kategori
-- [ ] Mengoptimalkan model untuk perangkat dengan performa rendah
-- [ ] Mengimplementasikan dalam aplikasi mobile
-
-## 👥 Kontribusi
-Kontribusi dan saran sangat diterima. Silakan buat issue atau pull request untuk berkontribusi.
-
----
- 
+*Dataset provided by Roboflow (License: CC BY 4.)
